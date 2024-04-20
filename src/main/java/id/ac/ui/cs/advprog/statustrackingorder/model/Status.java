@@ -9,7 +9,7 @@ import java.util.List;
 public class Status {
     private Long id;
     private Order order;
-    private String status;
+    private String orderStatus;
 
     public Status() {
         // Constructor kosong
@@ -17,12 +17,15 @@ public class Status {
 
     public Status(Order order, String status) {
         this.order = order;
-        this.status = status;
+        this.orderStatus = status;
     }
 
     public static Status createStatus(Order order, String status) {
         if (order == null) {
             throw new IllegalArgumentException("Order cannot be null");
+        }
+        if(!status.equals("Cancelled") && !status.equals("Validate")){
+            throw  new IllegalArgumentException("Invalid Status!");
         }
         return new Status(order, status);
     }
@@ -31,9 +34,11 @@ public class Status {
         if (newStatus == null || newStatus.isEmpty()) {
             throw new IllegalArgumentException("New status cannot be empty");
         }
-        // Tambahkan logika validasi status lainnya di sini sesuai kebutuhan
+        if(!newStatus.equals("Cancelled") && !newStatus.equals("Validate")){
+            throw  new IllegalArgumentException("Invalid Status!");
+        }
 
-        this.status = newStatus;
+        this.orderStatus = newStatus;
     }
 
     public static Status getStatusByOrder(List<Status> allStatus, Order order) {
@@ -45,5 +50,5 @@ public class Status {
         return null; // Return null jika order tidak ditemukan
     }
 
-    // Getter dan setter diimplementasikan oleh Lombok
+
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.util.AssertionErrors.*;
 
 public class OrderTest{
     private Order order;
@@ -50,33 +49,33 @@ class StatusTest {
     @Test
     void testCreateStatusWithValidOrderAndStatus() {
         Status orderStatus = new Status(this.order,"Unverified");
-        Assertions.assertEquals("Unverified", orderStatus.getStatus());
+        Assertions.assertEquals("Unverified", orderStatus.getOrderStatus());
     }
 
 
     @Test
-    public void testUpdateStatusWithValidNewStatusVerified() {
+   void testUpdateStatusWithValidNewStatusVerified() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
         String newStatus = "Verified";
 
         orderStatus.updateStatus(newStatus);
 
-        Assertions.assertEquals(newStatus, orderStatus.getStatus());
+        Assertions.assertEquals(newStatus, orderStatus.getOrderStatus());
     }
 
     @Test
-    public void testUpdateStatusWithValidNewStatusCanceled() {
+    void testUpdateStatusWithValidNewStatusCanceled() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
         String newStatus = "Canceled";
 
         orderStatus.updateStatus(newStatus);
 
-        Assertions.assertEquals(newStatus, orderStatus.getStatus());
+        Assertions.assertEquals(newStatus, orderStatus.getOrderStatus());
 
     }
 
     @Test
-    public void testUpdateStatusWithEmptyNewStatus() {
+    void testUpdateStatusWithEmptyNewStatus() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -85,13 +84,13 @@ class StatusTest {
     }
 
     @Test
-    public  void testUpdateStatusWithInvalidStatus(){
+    void testUpdateStatusWithInvalidStatus(){
         Status orderStatus = Status.createStatus(this.order, "Unverified");
         String newStatus = "Hacked";
 
 
         orderStatus.updateStatus(newStatus);
-        Assertions.assertFalse(orderStatus.getStatus().equals("Verified") || orderStatus.getStatus().equals("Canceled"));
+        Assertions.assertFalse(orderStatus.getOrderStatus().equals("Verified") || orderStatus.getOrderStatus().equals("Canceled"));
 
     }
     @Test
@@ -141,7 +140,7 @@ class StatusTest {
     }
 
     @Test
-    public void testGetStatusByOrderWithEmptyList() {
+    void testGetStatusByOrderWithEmptyList() {
         // Arrange
         Order order1 = new Order();
         order1.setOrderId(1L);

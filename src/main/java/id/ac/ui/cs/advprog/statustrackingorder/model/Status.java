@@ -36,6 +36,13 @@ public class Status {
         return new Status(order, status);
     }
 
+    public static boolean isValidStatus(String orderStatus) {
+        if(!orderStatus.equals("Cancelled") && !orderStatus.equals("Verified") && !orderStatus.equals("Unverified")){
+            return true;
+        }
+        return false;
+    }
+
     public void updateStatus(String newStatus) {
         if (newStatus == null || newStatus.isEmpty()) {
             throw new IllegalArgumentException("New status cannot be empty");

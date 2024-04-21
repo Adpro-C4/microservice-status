@@ -33,26 +33,18 @@ public class OrderTest{
 }
 
 class StatusTest {
-
     private Order order;
-
-
     @BeforeEach
     void setUp(){
         this.order = new Order();
         this.order.setOrderId(1L);
         this.order.setOrderName("Order Minuman");
     }
-
-
-
     @Test
     void testCreateStatusWithValidOrderAndStatus() {
         Status orderStatus = new Status(this.order,"Unverified");
         Assertions.assertEquals("Unverified", orderStatus.getOrderStatus());
     }
-
-
     @Test
    void testUpdateStatusWithValidNewStatusVerified() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
@@ -62,7 +54,6 @@ class StatusTest {
 
         Assertions.assertEquals(newStatus, orderStatus.getOrderStatus());
     }
-
     @Test
     void testUpdateStatusWithValidNewStatusCanceled() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
@@ -73,7 +64,6 @@ class StatusTest {
         Assertions.assertEquals(newStatus, orderStatus.getOrderStatus());
 
     }
-
     @Test
     void testUpdateStatusWithEmptyNewStatus() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
@@ -82,12 +72,10 @@ class StatusTest {
             orderStatus.updateStatus("");
         });
     }
-
     @Test
     void testUpdateStatusWithInvalidStatus(){
         Status orderStatus = Status.createStatus(this.order, "Unverified");
         String newStatus = "Hacked";
-
 
         orderStatus.updateStatus(newStatus);
         Assertions.assertFalse(orderStatus.getOrderStatus().equals("Verified") || orderStatus.getOrderStatus().equals("Canceled"));
@@ -110,16 +98,11 @@ class StatusTest {
         allStatus.add(orderStatus1);
         allStatus.add(orderStatus2);
 
-
         Status foundStatus = Status.getStatusByOrder(allStatus, order1);
-
 
         Assertions.assertNotNull(foundStatus);
         Assertions.assertEquals(orderStatus1, foundStatus);
     }
-
-
-
     @Test
     void testGetStatusByOrderWithNonexistentOrder() {
         List<Status> allStatus = new ArrayList<>();
@@ -138,10 +121,8 @@ class StatusTest {
         Status foundStatus = Status.getStatusByOrder(allStatus, order2);
         Assertions.assertNull(foundStatus);
     }
-
     @Test
     void testGetStatusByOrderWithEmptyList() {
-        // Arrange
         Order order1 = new Order();
         order1.setOrderId(1L);
         order1.setOrderName("Order BMW");

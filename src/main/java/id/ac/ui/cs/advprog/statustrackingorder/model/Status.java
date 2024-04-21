@@ -15,6 +15,12 @@ public class Status {
         // Constructor kosong
     }
 
+    public Status(Long id, Order order, String orderStatus){
+        this.id = id;
+        this.order =order;
+        this.orderStatus = orderStatus;
+    }
+
     public Status(Order order, String status) {
         this.order = order;
         this.orderStatus = status;
@@ -24,7 +30,7 @@ public class Status {
         if (order == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
-        if(!status.equals("Cancelled") && !status.equals("Validate")){
+        if(!status.equals("Cancelled") && !status.equals("Verified") && !status.equals("Unverified")){
             throw  new IllegalArgumentException("Invalid Status!");
         }
         return new Status(order, status);
@@ -34,7 +40,7 @@ public class Status {
         if (newStatus == null || newStatus.isEmpty()) {
             throw new IllegalArgumentException("New status cannot be empty");
         }
-        if(!newStatus.equals("Cancelled") && !newStatus.equals("Validate")){
+        if(!newStatus.equals("Cancelled") && !newStatus.equals("Verified") && !newStatus.equals("Unverified")){
             throw  new IllegalArgumentException("Invalid Status!");
         }
 

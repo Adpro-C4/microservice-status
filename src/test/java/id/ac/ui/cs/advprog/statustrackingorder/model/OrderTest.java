@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -34,6 +35,7 @@ public class OrderTest{
 
 class StatusTest {
     private Order order;
+
     @BeforeEach
     void setUp(){
         this.order = new Order();
@@ -57,7 +59,7 @@ class StatusTest {
     @Test
     void testUpdateStatusWithValidNewStatusCanceled() {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
-        String newStatus = "Canceled";
+        String newStatus = "Cancelled";
 
         orderStatus.updateStatus(newStatus);
 
@@ -77,8 +79,10 @@ class StatusTest {
         Status orderStatus = Status.createStatus(this.order, "Unverified");
         String newStatus = "Hacked";
 
-        orderStatus.updateStatus(newStatus);
-        Assertions.assertFalse(orderStatus.getOrderStatus().equals("Verified") || orderStatus.getOrderStatus().equals("Canceled"));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            orderStatus.updateStatus(newStatus);
+        });
 
     }
     @Test
@@ -132,6 +136,8 @@ class StatusTest {
         Status foundStatus = Status.getStatusByOrder(allStatus, order1);
         Assertions.assertNull(foundStatus);
     }
+
+
 
 }
 

@@ -1,45 +1,52 @@
 package id.ac.ui.cs.advprog.statustrackingorder.service;
 
-import id.ac.ui.cs.advprog.statustrackingorder.model.Order;
+
+import id.ac.ui.cs.advprog.statustrackingorder.model.StatusApi;
+import id.ac.ui.cs.advprog.statustrackingorder.repository.StatusApiRepository;
+
 import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
-import id.ac.ui.cs.advprog.statustrackingorder.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class StatusService {
+public class StatusApiService {
 
     @Autowired
-    private StatusRepository statusRepository;
+    private StatusApiRepository statusApiRepository;
 
-    public Status createStatus(Order order, String orderStatus) {
-        if (order == null) {
+    public StatusApi createStatus(Long orderId, String orderStatus) {
+        if (orderId == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
         if (Status.isValidStatus(orderStatus)) {
             throw new IllegalArgumentException("Invalid Status!");
         }
 
-        Status newStatus = Status.createStatus(order, orderStatus);
-        return statusRepository.save(newStatus);
+        StatusApi newStatus = StatusApi.createStatus(orderId, orderStatus);
+        return statusApiRepository.save(newStatus);
     }
 
-    public Status findStatusById(Long id) {
+    public StatusApi findStatusById(Long id) {
         if (id != null) {
-            return statusRepository.findById(id);
+            return statusApiRepository.findById(id);
         } else {
             throw new IllegalArgumentException("Status ID cannot be null");
         }
     }
 
-    public Status updateStatus(Status status) {
+    public StatusApi getStatusByOrderId(Long orderId) {
+        List<StatusApi> allStatus = statusApiRepository.getAllStatus();
+        return StatusApi.getStatusByOrder(allStatus, orderId);
+    }
+
+    public StatusApi updateStatus(StatusApi status) {
         if (status.getId() != null) {
-            Status existingStatus = statusRepository.findById(status.getId());
+            StatusApi existingStatus = statusApiRepository.findById(status.getId());
             if (existingStatus != null) {
                 if (!Status.isValidStatus(status.getOrderStatus())) {
-                    return statusRepository.update(status);
+                    return statusApiRepository.update(status);
                 } else {
                     throw new IllegalArgumentException("Invalid Status!");
                 }
@@ -53,9 +60,9 @@ public class StatusService {
 
     public void deleteStatusById(Long id) {
         if (id != null) {
-            Status existingStatus = statusRepository.findById(id);
+            StatusApi existingStatus = statusApiRepository.findById(id);
             if (existingStatus != null) {
-                statusRepository.deleteById(id);
+                statusApiRepository.deleteById(id);
             } else {
                 throw new IllegalArgumentException("Status not found for deletion");
             }
@@ -64,8 +71,6 @@ public class StatusService {
         }
     }
 
-    public Status getStatusByOrder(Order order) {
-        List<Status> allStatus = statusRepository.getAllStatus();
-        return Status.getStatusByOrder(allStatus, order);
-    }
+
+
 }

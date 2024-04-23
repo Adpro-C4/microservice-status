@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.statustrackingorder.repository;
 
-import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
+import id.ac.ui.cs.advprog.statustrackingorder.model.StatusApi;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,23 +9,27 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class StatusRepository {
-    private Map<Long, Status> statusMap;
+public class StatusApiRepository {
+    private Map<Long, StatusApi> statusMap;
 
-    public StatusRepository() {
+    public StatusApiRepository() {
         this.statusMap = new HashMap<>();
     }
 
-    public Status save(Status status) {
+    public StatusApi save(StatusApi status) {
         statusMap.put(status.getId(), status);
         return status;
     }
 
-    public Status findById(Long id) {
+    public StatusApi findById(Long id) {
         return statusMap.get(id);
     }
 
-    public Status update(Status status) {
+    public StatusApi findByOrderId(Long orderId){
+        return statusMap.get(orderId);
+    }
+
+    public StatusApi update(StatusApi status) {
         Long id = status.getId();
         if (id == null) {
             throw new IllegalArgumentException("Status ID cannot be null");
@@ -43,7 +47,7 @@ public class StatusRepository {
         statusMap.remove(id);
     }
 
-    public List<Status> getAllStatus() {
+    public List<StatusApi> getAllStatus() {
         return new ArrayList<>(statusMap.values());
     }
 }

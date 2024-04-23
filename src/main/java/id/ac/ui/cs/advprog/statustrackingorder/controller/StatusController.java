@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/test/status")
+@RequestMapping("/api/status")
 public class StatusController {
 
     private final StatusService statusService;
@@ -24,7 +24,7 @@ public class StatusController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStatus);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     public ResponseEntity<Status> findStatusById(@PathVariable("id") Long id) {
         Status status = statusService.findStatusById(id);
         if (status != null) {
@@ -33,6 +33,24 @@ public class StatusController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+//    @GetMapping("/statusbyorder/{orderId}")
+//    public ResponseEntity<Status> getStatusByOrder(@PathVariable("orderId") Long orderId) {
+//        Status status = statusService.getStatusByOrder(orderId);
+//        if (status != null) {
+//            return ResponseEntity.ok(status);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
+
+//    @GetMapping("/allstatus")
+//    public ResponseEntity<List<Status>> getAllStatus() {
+//        List<Status> allStatus = statusService.getAllStatus();
+//        return ResponseEntity.ok(allStatus);
+//    }
 
     @PutMapping("/update")
     public ResponseEntity<Status> updateStatus(@RequestBody Status status) {

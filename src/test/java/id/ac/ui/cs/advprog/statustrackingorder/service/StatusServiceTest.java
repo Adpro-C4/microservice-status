@@ -74,9 +74,6 @@ public class StatusServiceTest {
         verify(statusRepository).findById(1L);
     }
 
-
-
-
     @Test
     void testDeleteStatusByIdWithNonExistingId() {
         assertThrows(IllegalArgumentException.class, () -> statusService.deleteStatusById(100L));

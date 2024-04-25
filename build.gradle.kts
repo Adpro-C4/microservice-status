@@ -37,7 +37,7 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-//jj
+
 tasks.test{
     filter{
         excludeTestsMatching("*FunctionalTest")

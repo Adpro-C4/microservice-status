@@ -9,6 +9,16 @@ import java.util.List;
 public class StatusApi {
     private Long id;
     private Long orderId;
+
+    @Override
+    public String toString() {
+        return "StatusApi{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", orderStatus='" + orderStatus + '\'' +
+                '}';
+    }
+
     private String orderStatus;
 
     public StatusApi() {

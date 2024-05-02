@@ -7,60 +7,55 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+
 @RestController
-@RequestMapping("/status")
+@RequestMapping("api/status")
 public class StatusController {
 
-    private final StatusService statusService;
-
     @Autowired
-    public StatusController(StatusService statusService) {
-        this.statusService = statusService;
+    private StatusService statusService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getStatusById(@PathVariable("id") Long id) {
+        try {
+            Status status = statusService.getStatusById(id);
+            return ResponseEntity.ok(status);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such status with id: " + id);
+        }
+    }
+
+
+    @GetMapping("/orderid/{id}")
+    public ResponseEntity<Object> getStatusByOderId(@PathVariable("id") Long orderId) {
+        try {
+            Status status = statusService.getStatusByOrderId(orderId);
+            return ResponseEntity.ok(status);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such status with id: " + orderId);
+        }
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Status> createStatus(@RequestBody Status status) {
-        Status createdStatus = statusService.createStatus(status.getOrder(), status.getOrderStatus());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStatus);
+    public ResponseEntity<Object> createStatus(@RequestBody Status status) {
+        statusService.createStatus(status);
+        return ResponseEntity.ok("Status created successfully");
     }
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<Status> findStatusById(@PathVariable("id") Long id) {
-        Status status = statusService.findStatusById(id);
-        if (status != null) {
-            return ResponseEntity.ok(status);
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateStatus(@PathVariable("id") Long id, @RequestBody Status updateStatus) {
+        Status existingStatus = statusService.getStatusById(id);
+        if (existingStatus != null) {
+            existingStatus.setOrderStatus(updateStatus.getOrderStatus());
+            statusService.updateStatus(existingStatus);
+            return ResponseEntity.ok("Status updated successfully");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
 
-//    @GetMapping("/statusbyorder/{orderId}")
-//    public ResponseEntity<Status> getStatusByOrder(@PathVariable("orderId") Long orderId) {
-//        Status status = statusService.getStatusByOrder(orderId);
-//        if (status != null) {
-//            return ResponseEntity.ok(status);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
-
-//    @GetMapping("/allstatus")
-//    public ResponseEntity<List<Status>> getAllStatus() {
-//        List<Status> allStatus = statusService.getAllStatus();
-//        return ResponseEntity.ok(allStatus);
-//    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Status> updateStatus(@RequestBody Status status) {
-        Status updatedStatus = statusService.updateStatus(status);
-        return ResponseEntity.ok(updatedStatus);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteStatusById(@PathVariable("id") Long id) {
-        statusService.deleteStatusById(id);
-        return ResponseEntity.noContent().build();
-    }
 }

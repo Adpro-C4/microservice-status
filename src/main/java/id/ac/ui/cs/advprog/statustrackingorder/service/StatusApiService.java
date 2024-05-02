@@ -4,7 +4,6 @@ package id.ac.ui.cs.advprog.statustrackingorder.service;
 import id.ac.ui.cs.advprog.statustrackingorder.model.StatusApi;
 import id.ac.ui.cs.advprog.statustrackingorder.repository.StatusApiRepository;
 
-import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class StatusApiService {
         if (orderId == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
-        if (Status.isValidStatus(orderStatus)) {
+        if (StatusApi.isValidStatus(orderStatus)) {
             throw new IllegalArgumentException("Invalid Status!");
         }
 
@@ -45,7 +44,7 @@ public class StatusApiService {
         if (status.getId() != null) {
             StatusApi existingStatus = statusApiRepository.findById(status.getId());
             if (existingStatus != null) {
-                if (!Status.isValidStatus(status.getOrderStatus())) {
+                if (!StatusApi.isValidStatus(status.getOrderStatus())) {
                     return statusApiRepository.update(status);
                 } else {
                     throw new IllegalArgumentException("Invalid Status!");

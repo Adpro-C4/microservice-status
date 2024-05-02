@@ -1,6 +1,8 @@
 package id.ac.ui.cs.advprog.statustrackingorder.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "status")
-public class Status {
+@Table(name = "tracking")
+public class TrackOrder {
     @Id
-    private Long id;
+    private Long trackingId;
     private Long orderId;
-    private String orderStatus;
+    private String methode;
+    private String resiCode;
+
 }

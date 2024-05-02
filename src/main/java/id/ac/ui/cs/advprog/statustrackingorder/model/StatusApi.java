@@ -1,14 +1,27 @@
 package id.ac.ui.cs.advprog.statustrackingorder.model;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.List;
+
 
 @Getter @Setter
 public class StatusApi {
+
     private Long id;
+
     private Long orderId;
+    private String orderStatus;
+
+    private static final List<String> VALID_STATUSES = Arrays.asList("Cancelled", "Verified", "Unverified");
+
+    public static boolean isValidStatus(String orderStatus) {
+        return true;
+    }
+
 
     @Override
     public String toString() {
@@ -19,7 +32,6 @@ public class StatusApi {
                 '}';
     }
 
-    private String orderStatus;
 
     public StatusApi() {
         // Constructor kosong
@@ -40,30 +52,23 @@ public class StatusApi {
         if (orderId == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
-        if(!status.equals("Cancelled") && !status.equals("Verified") && !status.equals("Unverified")){
-            throw  new IllegalArgumentException("Invalid Status!");
-        }
+
+
+        validateStatus(status);
         return new StatusApi(orderId, status);
     }
 
-    public static boolean isValidStatus(String orderStatus) {
-        if(!orderStatus.equals("Cancelled") && !orderStatus.equals("Verified") && !orderStatus.equals("Unverified")){
-            return true;
+    private static void validateStatus(String status) {
+
+        if (!VALID_STATUSES.contains(status)) {
+            throw new IllegalArgumentException("Invalid Status!");
         }
-        return false;
     }
 
     public void updateStatus(String newStatus) {
-        if (newStatus == null || newStatus.isEmpty()) {
-            throw new IllegalArgumentException("New status cannot be empty");
-        }
-        if(!newStatus.equals("Cancelled") && !newStatus.equals("Verified") && !newStatus.equals("Unverified")){
-            throw  new IllegalArgumentException("Invalid Status!");
-        }
-
+        validateStatus(newStatus);
         this.orderStatus = newStatus;
     }
-
     public static StatusApi getStatusByOrder(List<StatusApi> allStatus, Long orderId) {
         for (StatusApi status : allStatus) {
             if (status.getOrderId().equals(orderId)) {

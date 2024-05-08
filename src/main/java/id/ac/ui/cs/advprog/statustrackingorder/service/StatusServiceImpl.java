@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.statustrackingorder.service;
 
+import id.ac.ui.cs.advprog.statustrackingorder.enums.OrderStatus;
+import id.ac.ui.cs.advprog.statustrackingorder.eventdriven.Producer;
 import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import id.ac.ui.cs.advprog.statustrackingorder.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ public class StatusServiceImpl implements  StatusService {
 
     @Autowired
     private StatusRepository statusRepository;
+
+    @Autowired
+    private Producer messageQueue;
 
     @Override
     public Status createStatus(Status status) {
@@ -32,7 +37,7 @@ public class StatusServiceImpl implements  StatusService {
     }
 
     @Override
-    public Status getStatusByOrderId(Long orderId) {
+    public Status getStatusByOrderId(String orderId) {
         Optional<Status> statusOptional = statusRepository.findByOrderId(orderId);
         if (statusOptional.isPresent()) {
             Status status = statusOptional.get();
@@ -42,11 +47,21 @@ public class StatusServiceImpl implements  StatusService {
         }
     }
     @Override
-    public void updateStatus(Status existingStatus) throws NoSuchElementException {
-        Long id = existingStatus.getId();
+    public void updateStatus(Status newStatus) throws NoSuchElementException {
+        Long id = newStatus.getId();
         Status fetchedStatus = getStatusById(id);
         if (fetchedStatus != null) {
-            fetchedStatus.setOrderStatus(existingStatus.getOrderStatus());
+            if(fetchedStatus.getOrderStatus().equals(OrderStatus.SELESAI.getDisplayName())){
+                // sudah disetujui (selesai) tidak bisa ditolak
+                // empty block
+            }
+            else{
+                if(newStatus.getOrderStatus().equals(OrderStatus.SELESAI.getDisplayName())){ // order baru saja disetujui
+                    // kirim notifikasi ke product microservice untuk update stok.
+                    messageQueue.sendMessage("update-stok-produk-routing-key", fetchedStatus.getOrderId());
+                }
+                fetchedStatus.setOrderStatus(newStatus.getOrderStatus());
+            }
             statusRepository.save(fetchedStatus);
         } else {
             throw new NoSuchElementException("No such status with id: " + id);

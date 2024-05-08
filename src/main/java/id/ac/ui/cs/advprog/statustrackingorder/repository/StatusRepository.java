@@ -11,5 +11,5 @@ import java.util.Optional;
 @Transactional
 public interface StatusRepository extends JpaRepository<Status, Long> {
     // Metode tambahan khusus dapat ditambahkan di sini
-    Optional<Status> findByOrderId(Long orderId);
+    Optional<Status> findByOrderId(String orderId);
 }

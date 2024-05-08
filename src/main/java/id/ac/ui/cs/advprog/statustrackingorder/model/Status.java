@@ -14,7 +14,8 @@ import lombok.Setter;
 @Table(name = "status")
 public class Status {
     @Id
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Long id;
-    private Long orderId;
+    private String orderId;
     private String orderStatus;
 }

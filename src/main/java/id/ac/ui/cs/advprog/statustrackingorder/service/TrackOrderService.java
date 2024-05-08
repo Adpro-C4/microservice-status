@@ -6,8 +6,8 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 public interface TrackOrderService {
     public  TrackOrder createTracking( TrackOrder trackOrder);
 
-    public TrackOrder getTrackingById(Long id);
+    public TrackOrder getTrackingById(String id);
 
-    public TrackOrder getTrackingByOrderId(Long orderId);
+    public TrackOrder getTrackingByOrderId(String orderId);
 
 }

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -20,12 +21,13 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
 
     @Override
     public TrackOrder createTracking(TrackOrder trackOrder) {
+        trackOrder.setTrackingId(UUID.randomUUID().toString());
         trackOrder.setResiCode(generateResiCode(trackOrder.getMethode(), trackOrder.getResiCode(), trackOrder.getOrderId()));
         return  trackOrderRepository.save(trackOrder);
     }
 
     @Override
-    public TrackOrder getTrackingById(Long id) {
+    public TrackOrder getTrackingById(String id) {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findById(id);
         if (trackOrderOptional.isPresent()) {
             TrackOrder tracking = trackOrderOptional.get();
@@ -36,7 +38,7 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
     }
 
     @Override
-    public TrackOrder getTrackingByOrderId(Long orderId) {
+    public TrackOrder getTrackingByOrderId(String orderId) {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findByOrderId(orderId);
         if (trackOrderOptional.isPresent()) {
             return trackOrderOptional.get();
@@ -44,13 +46,13 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
             throw new NoSuchElementException("No such product with id: " + orderId);
         }
     }
-    private String generateResiCode(String method, String resiCode, Long orderId) {
-            return switch (method.toLowerCase()) {
-                case "jte" -> "JTE-" + resiJTE(resiCode) ;
-                case "gobek" -> "GBK-" + resiGBK(resiCode);
-                case "siwuzz" -> "SWZ-" + resiSIWUZZ(resiCode);
-                default -> throw new IllegalArgumentException("Invalid shipping method");
-            };
+    private String generateResiCode(String method, String resiCode, String orderId) {
+        return switch (method.toLowerCase()) {
+            case "jte" -> "JTE-" + resiJTE(resiCode) ;
+            case "gobek" -> "GBK-" + resiGBK(resiCode);
+            case "siwuzz" -> "SWZ-" + resiSIWUZZ(resiCode);
+            default -> throw new IllegalArgumentException("Invalid shipping method");
+        };
     }
 
     private String resiJTE(String resiCode) {

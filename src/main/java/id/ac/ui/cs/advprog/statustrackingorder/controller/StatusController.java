@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("api/status")
+@RequestMapping("/api/status")
 public class StatusController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class StatusController {
 
 
     @GetMapping("/orderid/{id}")
-    public ResponseEntity<Object> getStatusByOderId(@PathVariable("id") Long orderId) {
+    public ResponseEntity<Object> getStatusByOderId(@PathVariable("id") String orderId) {
         try {
             Status status = statusService.getStatusByOrderId(orderId);
             return ResponseEntity.ok(status);
@@ -43,7 +43,6 @@ public class StatusController {
         return ResponseEntity.ok("Status created successfully");
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateStatus(@PathVariable("id") Long id, @RequestBody Status updateStatus) {
         Status existingStatus = statusService.getStatusById(id);
@@ -55,7 +54,4 @@ public class StatusController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 }

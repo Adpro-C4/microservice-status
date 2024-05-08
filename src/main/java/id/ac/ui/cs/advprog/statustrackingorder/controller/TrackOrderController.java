@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.statustrackingorder.controller;
 
-import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 import id.ac.ui.cs.advprog.statustrackingorder.service.TrackOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("api/trackorder/")
+@RequestMapping("/api/trackorder/")
 public class TrackOrderController {
 
     @Autowired
     private TrackOrderService trackOrderService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getTrackOrderById(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getTrackOrderById(@PathVariable("id") String id) {
         try {
             TrackOrder tracking = trackOrderService.getTrackingById(id);
             return ResponseEntity.ok(tracking);
@@ -28,7 +27,7 @@ public class TrackOrderController {
     }
 
     @GetMapping("/orderid/{id}")
-    public ResponseEntity<Object> getStatusByOderId(@PathVariable("id") Long orderId) {
+    public ResponseEntity<Object> getStatusByOderId(@PathVariable("id") String orderId) {
         try {
             TrackOrder tracking = trackOrderService.getTrackingByOrderId(orderId);
             return ResponseEntity.ok(tracking);

@@ -4,11 +4,12 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 
 
 public interface StatusService {
+
     public Status createStatus(Status status);
 
     public Status getStatusById(Long id);
 
-    public Status getStatusByOrderId(Long orderId);
+    public Status getStatusByOrderId(String orderId);
 
     public void  updateStatus(Status status);
 

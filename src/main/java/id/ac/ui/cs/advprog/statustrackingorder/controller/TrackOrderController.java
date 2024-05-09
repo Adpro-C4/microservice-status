@@ -38,7 +38,7 @@ public class TrackOrderController {
 
     @PostMapping("/create")
     public ResponseEntity<Object> createTrackingOrder(@RequestBody TrackOrder tracking) {
-        trackOrderService.createTracking(tracking);
+        trackOrderService.createTrackingAsync(tracking);
         return ResponseEntity.ok("Status created successfully");
     }
 

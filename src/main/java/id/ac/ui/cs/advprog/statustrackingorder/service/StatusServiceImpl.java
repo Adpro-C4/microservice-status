@@ -5,10 +5,12 @@ import id.ac.ui.cs.advprog.statustrackingorder.eventdriven.Producer;
 import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import id.ac.ui.cs.advprog.statustrackingorder.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class StatusServiceImpl implements  StatusService {
@@ -20,9 +22,10 @@ public class StatusServiceImpl implements  StatusService {
     private Producer messageQueue;
 
     @Override
-    public Status createStatus(Status status) {
-
-        return statusRepository.save(status);
+    @Async
+    public CompletableFuture<Status> createStatusAsync(Status status) {
+        // Simpan status secara asynchronous dan kembalikan hasilnya dalam CompletableFuture
+        return CompletableFuture.supplyAsync(() -> statusRepository.save(status));
     }
 
     @Override
@@ -47,6 +50,7 @@ public class StatusServiceImpl implements  StatusService {
         }
     }
     @Override
+    @Async
     public void updateStatus(Status newStatus) throws NoSuchElementException {
         Long id = newStatus.getId();
         Status fetchedStatus = getStatusById(id);
@@ -58,6 +62,7 @@ public class StatusServiceImpl implements  StatusService {
             else{
                 if(newStatus.getOrderStatus().equals(OrderStatus.SELESAI.getDisplayName())){ // order baru saja disetujui
                     // kirim notifikasi ke product microservice untuk update stok.
+                    System.out.println("INIIIIIIIIIIII");
                     messageQueue.sendMessage("update-stok-produk-routing-key", fetchedStatus.getOrderId());
                 }
                 fetchedStatus.setOrderStatus(newStatus.getOrderStatus());

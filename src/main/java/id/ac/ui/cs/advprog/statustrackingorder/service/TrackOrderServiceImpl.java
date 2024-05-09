@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 import id.ac.ui.cs.advprog.statustrackingorder.repository.TrackOrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -20,31 +22,24 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
     private  TrackOrderRepository trackOrderRepository;
 
     @Override
-    public TrackOrder createTracking(TrackOrder trackOrder) {
+    @Async
+    public CompletableFuture<TrackOrder> createTrackingAsync(TrackOrder trackOrder) {
         trackOrder.setTrackingId(UUID.randomUUID().toString());
         trackOrder.setResiCode(generateResiCode(trackOrder.getMethode(), trackOrder.getResiCode(), trackOrder.getOrderId()));
-        return  trackOrderRepository.save(trackOrder);
+        TrackOrder savedTrackOrder = trackOrderRepository.save(trackOrder);
+        return CompletableFuture.completedFuture(savedTrackOrder);
     }
 
     @Override
     public TrackOrder getTrackingById(String id) {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findById(id);
-        if (trackOrderOptional.isPresent()) {
-            TrackOrder tracking = trackOrderOptional.get();
-            return tracking;
-        } else {
-            throw new NoSuchElementException("No such product with id: " + id);
-        }
+        return trackOrderOptional.orElseThrow(() -> new NoSuchElementException("No such track order with id: " + id));
     }
 
     @Override
     public TrackOrder getTrackingByOrderId(String orderId) {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findByOrderId(orderId);
-        if (trackOrderOptional.isPresent()) {
-            return trackOrderOptional.get();
-        } else {
-            throw new NoSuchElementException("No such product with id: " + orderId);
-        }
+        return trackOrderOptional.orElseThrow(() -> new NoSuchElementException("No such track order with order id: " + orderId));
     }
     private String generateResiCode(String method, String resiCode, String orderId) {
         return switch (method.toLowerCase()) {

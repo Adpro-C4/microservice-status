@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.statustrackingorder.eventdriven;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,16 @@ public class RabbitMQListener {
             System.out.println(message);
             ObjectMapper objectMapper = new ObjectMapper();
             TrackOrder order = objectMapper.readValue(message, TrackOrder.class);
-            trackOrderService.createTracking(order);
-            Status status = new Status();
-            status.setOrderId(order.getOrderId());
-            status.setOrderStatus(OrderStatus.MENUNGGU_PERSETUJUAN_ADMIN.getDisplayName());
-            statusService.createStatus(status);
+            CompletableFuture.runAsync(()->{
+                trackOrderService.createTrackingAsync(order);
+            });
+            CompletableFuture.runAsync(()->{
+                Status status = new Status();
+                status.setOrderId(order.getOrderId());
+                status.setOrderStatus(OrderStatus.MENUNGGU_PERSETUJUAN_ADMIN.getDisplayName());
+                statusService.createStatusAsync(status);
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e){

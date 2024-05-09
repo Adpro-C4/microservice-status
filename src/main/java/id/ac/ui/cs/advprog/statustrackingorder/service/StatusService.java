@@ -1,11 +1,13 @@
 package id.ac.ui.cs.advprog.statustrackingorder.service;
 
+import java.util.concurrent.CompletableFuture;
+
 import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 
 
 public interface StatusService {
 
-    public Status createStatus(Status status);
+    public CompletableFuture<Status> createStatusAsync(Status status);
 
     public Status getStatusById(Long id);
 

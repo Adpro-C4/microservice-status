@@ -39,18 +39,18 @@ public class StatusController {
 
     @PostMapping("/create")
     public ResponseEntity<Object> createStatus(@RequestBody Status status) {
-        statusService.createStatus(status);
+        statusService.createStatusAsync(status);
         return ResponseEntity.ok("Status created successfully");
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateStatus(@PathVariable("id") Long id, @RequestBody Status updateStatus) {
-        Status existingStatus = statusService.getStatusById(id);
-        if (existingStatus != null) {
-            existingStatus.setOrderStatus(updateStatus.getOrderStatus());
-            statusService.updateStatus(existingStatus);
-            return ResponseEntity.ok("Status updated successfully");
-        } else {
+
+        try{
+            updateStatus.setId(id);
+            statusService.updateStatus(updateStatus);
+            return  ResponseEntity.ok("Status updated successfully");
+        }catch(NoSuchElementException err){
             return ResponseEntity.notFound().build();
         }
     }

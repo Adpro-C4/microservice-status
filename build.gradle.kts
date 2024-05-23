@@ -3,6 +3,7 @@ plugins {
     jacoco
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+    id("org.sonarqube") version "5.0.0.4638"
 }
 
 group = "id.ac.ui.cs.advprog"
@@ -20,6 +21,14 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "Adpro-C4_microservice-pembelian")
+        property("sonar.organization", "adpro-c4")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 dependencies {
@@ -73,4 +82,21 @@ tasks.test{
 
 tasks.jacocoTestReport{
     dependsOn(tasks.test)
+}
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.named("sonarqube") {
+    dependsOn("test")
 }

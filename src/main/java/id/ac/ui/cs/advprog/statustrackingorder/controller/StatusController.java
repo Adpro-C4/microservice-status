@@ -48,7 +48,7 @@ public class StatusController {
         return ResponseEntity.ok("Status created successfully");
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<Object> updateStatus(@PathVariable("id") Long id, @RequestBody Status updateStatus) {
 
         try{

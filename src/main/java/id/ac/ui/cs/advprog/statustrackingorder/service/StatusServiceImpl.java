@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -73,6 +74,10 @@ public class StatusServiceImpl implements  StatusService {
         }
     }
 
+    @Override
+    public List<Status> getAllStatus() {
+        return statusRepository.findAll();
+    }
 
 
 }

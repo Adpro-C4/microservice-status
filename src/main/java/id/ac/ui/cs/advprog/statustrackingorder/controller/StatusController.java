@@ -37,6 +37,11 @@ public class StatusController {
         }
     }
 
+    @GetMapping("/all")
+    public  ResponseEntity<Object> allStatus(){
+        return  ResponseEntity.ok(statusService.getAllStatus());
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Object> createStatus(@RequestBody Status status) {
         statusService.createStatusAsync(status);

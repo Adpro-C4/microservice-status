@@ -13,8 +13,13 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/status")
 public class StatusController {
 
+
+    private final StatusService statusService;
+
     @Autowired
-    private StatusService statusService;
+    public StatusController(StatusService statusService) {
+        this.statusService = statusService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getStatusById(@PathVariable("id") Long id) {

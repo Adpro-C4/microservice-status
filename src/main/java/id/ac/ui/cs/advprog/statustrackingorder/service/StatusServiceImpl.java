@@ -16,16 +16,18 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class StatusServiceImpl implements  StatusService {
 
-    @Autowired
-    private StatusRepository statusRepository;
+    private final StatusRepository statusRepository;
+    private final Producer messageQueue;
 
     @Autowired
-    private Producer messageQueue;
+    public StatusServiceImpl(StatusRepository statusRepository, Producer messageQueue) {
+        this.statusRepository = statusRepository;
+        this.messageQueue = messageQueue;
+    }
 
     @Override
     @Async
     public CompletableFuture<Status> createStatusAsync(Status status) {
-        // Simpan status secara asynchronous dan kembalikan hasilnya dalam CompletableFuture
         return CompletableFuture.supplyAsync(() -> statusRepository.save(status));
     }
 
@@ -61,9 +63,7 @@ public class StatusServiceImpl implements  StatusService {
                 // empty block
             }
             else{
-                if(newStatus.getOrderStatus().equals(OrderStatus.SELESAI.getDisplayName())){ // order baru saja disetujui
-                    // kirim notifikasi ke product microservice untuk update stok.
-                    System.out.println("INIIIIIIIIIIII");
+                if(newStatus.getOrderStatus().equals(OrderStatus.SELESAI.getDisplayName())){
                     messageQueue.sendMessage("update-stok-produk-routing-key", fetchedStatus.getOrderId());
                 }
                 fetchedStatus.setOrderStatus(newStatus.getOrderStatus());

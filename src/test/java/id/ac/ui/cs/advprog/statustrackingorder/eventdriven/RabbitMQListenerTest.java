@@ -32,40 +32,30 @@ public class RabbitMQListenerTest {
     @InjectMocks
     private RabbitMQListener rabbitMQListener;
 
-    @Before
-    public void setUp() {
-        // Setup any initialization needed for tests
-    }
-
     @Test
     public void testReceiveOrderTrackingMessage() throws IOException {
-        // Arrange
+
         String message = "{\"orderId\": \"123456\", \"orderStatus\": \"PROCESSING\"}";
         TrackOrder order = new TrackOrder();
         order.setOrderId("123456");
-//        order.setOrderStatus("PROCESSING");
+
 
         when(trackOrderService.createTrackingAsync(any(TrackOrder.class))).thenReturn(CompletableFuture.completedFuture(null));
 
-        // Act
         rabbitMQListener.receiveOrderTrackingMessage(message);
 
-        // Assert
         verify(trackOrderService, times(1)).createTrackingAsync(any(TrackOrder.class));
         verify(statusService, times(1)).createStatusAsync(any(Status.class));
     }
 
     @Test
     public void testReceiveOrderTrackingMessage_ExceptionHandling() throws IOException {
-        // Arrange
         String message = "{\"orderId\": \"123456\", \"orderStatus\": \"PROCESSING\"}";
 
         when(trackOrderService.createTrackingAsync(any(TrackOrder.class))).thenThrow(new RuntimeException("Failed to create tracking"));
 
-        // Act
         rabbitMQListener.receiveOrderTrackingMessage(message);
 
-        // Assert
         verify(trackOrderService, times(1)).createTrackingAsync(any(TrackOrder.class));
         verify(statusService, never()).createStatusAsync(any(Status.class)); // Ensure that statusService.createStatusAsync is not called if there's an exception
     }

@@ -13,8 +13,12 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/trackorder/")
 public class TrackOrderController {
 
+    private final TrackOrderService trackOrderService;
+
     @Autowired
-    private TrackOrderService trackOrderService;
+    public TrackOrderController(TrackOrderService trackOrderService) {
+        this.trackOrderService = trackOrderService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getTrackOrderById(@PathVariable("id") String id) {

@@ -8,7 +8,7 @@ import org.mockito.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +32,8 @@ public class TrackOrderServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+
 
     @Test
     public void testCreateTrackingAsync() throws Exception {
@@ -101,22 +103,18 @@ public class TrackOrderServiceTest {
     public void testGenerateResiCode() {
         String method = "jte";
         String resiCode = "auto";
-        String orderId = "order123";
 
-        String result = trackOrderService.generateResiCode(method, resiCode, orderId);
+        String result = trackOrderService.generateResiCode(method, resiCode);
 
         assertTrue(result.startsWith("JTE-"));
     }
-
     @Test
     public void testGenerateResiCodeInvalidMethod() {
         String method = "invalid";
         String resiCode = "auto";
-        String orderId = "order123";
 
-        assertThrows(IllegalArgumentException.class, () -> trackOrderService.generateResiCode(method, resiCode, orderId));
+        assertThrows(IllegalArgumentException.class, () -> trackOrderService.generateResiCode(method, resiCode));
     }
-
     @Test
     public void testGenerateAlphanumeric() {
         String alphanumeric = trackOrderService.generateAlphanumeric();
@@ -124,7 +122,6 @@ public class TrackOrderServiceTest {
         assertEquals(12, alphanumeric.length());
         assertTrue(alphanumeric.matches("[A-Z0-9]+"));
     }
-
     @Test
     public void testGenerateAlphanumericNonNumber() {
         String alphanumericNonNumber = trackOrderService.generateAlphanumericNonNumber();
@@ -132,7 +129,6 @@ public class TrackOrderServiceTest {
         assertEquals(12, alphanumericNonNumber.length());
         assertTrue(alphanumericNonNumber.matches("[A-Z]+"));
     }
-
     @Test
     public void testResiJTEAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiJTE", String.class);
@@ -142,8 +138,6 @@ public class TrackOrderServiceTest {
         assertEquals(12, resiCode.length());
         assertTrue(resiCode.matches("\\d+"));
     }
-
-
     @Test
     public void testResiJTEWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiJTE", String.class);
@@ -151,7 +145,6 @@ public class TrackOrderServiceTest {
         String resiCode = (String) method.invoke(trackOrderService, "123456789012");
         assertEquals("123456789012", resiCode);
     }
-
     @Test
     public void testResiGBKAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiGBK", String.class);
@@ -161,7 +154,6 @@ public class TrackOrderServiceTest {
         assertEquals(12, resiCode.length());
         assertTrue(resiCode.matches("[A-Z0-9]+"));
     }
-
     @Test
     public void testResiGBKWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiGBK", String.class);
@@ -169,7 +161,6 @@ public class TrackOrderServiceTest {
         String resiCode = (String) method.invoke(trackOrderService, "ABCDEFGHIJKL");
         assertEquals("ABCDEFGHIJKL", resiCode);
     }
-
     @Test
     public void testResiSIWUZZAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiSIWUZZ", String.class);
@@ -179,7 +170,6 @@ public class TrackOrderServiceTest {
         assertEquals(12, resiCode.length());
         assertTrue(resiCode.matches("[A-Z]+"));
     }
-
     @Test
     public void testResiSIWUZZWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiSIWUZZ", String.class);
@@ -187,7 +177,6 @@ public class TrackOrderServiceTest {
         String resiCode = (String) method.invoke(trackOrderService, "ABCDEFGHIJKL");
         assertEquals("ABCDEFGHIJKL", resiCode);
     }
-
     @Test
     public void testValidateNumberValid() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
@@ -195,7 +184,6 @@ public class TrackOrderServiceTest {
         String resiCode = (String) method.invoke(trackOrderService, "123456789012");
         assertEquals("123456789012", resiCode);
     }
-
     @Test
     public void testValidateNumberInvalidLength() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
@@ -209,7 +197,6 @@ public class TrackOrderServiceTest {
             assertEquals("Invalid input: '12345' must be equals 12.", actualException.getMessage());
         }
     }
-
 
     @Test
     public void testValidateAlphanumericValid() throws Exception {
@@ -233,8 +220,6 @@ public class TrackOrderServiceTest {
         }
     }
 
-
-    // Bagian 1: Menambahkan tes unit untuk kondisi invalid pada validateNumber
     @Test
     public void testValidateNumberInvalidFormat() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
@@ -268,39 +253,29 @@ public class TrackOrderServiceTest {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("genereteNumber");
         method.setAccessible(true);
 
-        // Mock TrackOrderServiceImpl untuk menghasilkan generatedNumber dengan panjang kurang dari 12
         TrackOrderServiceImpl spyService = spy(trackOrderService);
-        doReturn("1234567890").when(spyService).genereteNumber(); // Menghasilkan 10 karakter
+        doReturn("1234567890").when(spyService).genereteNumber();
 
         String generatedNumber = (String) method.invoke(spyService);
 
-        // Cek panjang sebelum penambahan angka acak
         int initialLength = generatedNumber.length();
         assertTrue(initialLength < 12, "Panjang generatedNumber sebelum penambahan angka acak seharusnya kurang dari 12");
 
-        // Hitung remainingLength dan hasil akhirnya
         int remainingLength = 12 - initialLength;
         String randomDigits = TrackOrderServiceImpl.generateRandomDigits(remainingLength);
         String finalGeneratedNumber = generatedNumber + randomDigits;
 
-        // Verifikasi panjang akhir adalah 12
         assertEquals(12, finalGeneratedNumber.length(), "Panjang finalGeneratedNumber setelah penambahan angka acak seharusnya 12");
 
-        // Verifikasi format angka acak
         assertTrue(finalGeneratedNumber.matches("\\d{12}"), "finalGeneratedNumber seharusnya berformat 12 digit angka");
     }
 
-
-
-
-
-    // Bagian 2: Menambahkan tes unit untuk generateResiCode dengan method gobek dan siwuzz
     @Test
     public void testGenerateResiCodeGobek() throws Exception {
         String method = "gobek";
         String resiCode = "auto";
-        String orderId = "order123";
-        String result = trackOrderService.generateResiCode(method, resiCode, orderId);
+
+        String result = trackOrderService.generateResiCode(method, resiCode);
         assertNotNull(result);
         assertTrue(result.startsWith("GBK-"));
         assertEquals(16, result.length());
@@ -310,8 +285,8 @@ public class TrackOrderServiceTest {
     public void testGenerateResiCodeSiwuzz() throws Exception {
         String method = "siwuzz";
         String resiCode = "auto";
-        String orderId = "order123";
-        String result = trackOrderService.generateResiCode(method, resiCode, orderId);
+
+        String result = trackOrderService.generateResiCode(method, resiCode);
         assertNotNull(result);
         assertTrue(result.startsWith("SWZ-"));
         assertEquals(16, result.length());

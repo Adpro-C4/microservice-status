@@ -18,18 +18,23 @@ import java.util.concurrent.CompletableFuture;
 @Transactional
 public class TrackOrderServiceImpl implements TrackOrderService {
 
-    @Autowired
-    private TrackOrderRepository trackOrderRepository;
-
+    private final TrackOrderRepository trackOrderRepository;
     private static final String INVALID_INPUT_LENGTH = "Invalid input: '%s' must be equals 12.";
     private static final String INVALID_INPUT_NUMBER = "Invalid input: '%s' must be a number.";
     private static final Random RANDOM = new Random();
+    private static final String REGEX = "\\d+";
+
+    @Autowired
+    public TrackOrderServiceImpl(TrackOrderRepository trackOrderRepository) {
+        this.trackOrderRepository = trackOrderRepository;
+    }
+
 
     @Override
     @Async
     public CompletableFuture<TrackOrder> createTrackingAsync(TrackOrder trackOrder) {
         trackOrder.setTrackingId(UUID.randomUUID().toString());
-        trackOrder.setResiCode(generateResiCode(trackOrder.getMethode(), trackOrder.getResiCode(), trackOrder.getOrderId()));
+        trackOrder.setResiCode(generateResiCode(trackOrder.getMethode(), trackOrder.getResiCode()));
         TrackOrder savedTrackOrder = trackOrderRepository.save(trackOrder);
         return CompletableFuture.completedFuture(savedTrackOrder);
     }
@@ -46,7 +51,7 @@ public class TrackOrderServiceImpl implements TrackOrderService {
         return trackOrderOptional.orElseThrow(() -> new NoSuchElementException("No such track order with order id: " + orderId));
     }
 
-    String generateResiCode(String method, String resiCode, String orderId) {
+    String generateResiCode(String method, String resiCode) {
         return switch (method.toLowerCase()) {
             case "jte" -> "JTE-" + resiJTE(resiCode);
             case "gobek" -> "GBK-" + resiGBK(resiCode);
@@ -80,7 +85,7 @@ public class TrackOrderServiceImpl implements TrackOrderService {
         if (resiCode.length() != 12) {
             throw new IllegalArgumentException(String.format(INVALID_INPUT_LENGTH, resiCode));
         }
-        if (!resiCode.matches("\\d+")) {
+        if (!resiCode.matches(REGEX)) {
             throw new IllegalArgumentException(String.format(INVALID_INPUT_NUMBER, resiCode));
         }
         return resiCode;
@@ -101,10 +106,8 @@ public class TrackOrderServiceImpl implements TrackOrderService {
         String hour = String.format("%02d", now.getHour());
         String minute = String.format("%02d", now.getMinute());
 
-        // Gabungkan semua bagian menjadi satu string
         String generatedNumber = year + month + day + hour + minute;
 
-        // Periksa panjang string, jika kurang dari 12, tambahkan angka random
         if (generatedNumber.length() < 12) {
             int remainingLength = 12 - generatedNumber.length();
             generatedNumber += generateRandomDigits(remainingLength);

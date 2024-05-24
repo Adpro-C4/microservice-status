@@ -31,14 +31,12 @@ sonarqube {
     }
 }
 
-// Define version variables
+
 val snakeYamlVersion = "1.29"
 val commonsPoolVersion = "2.11.1"
 val log4jVersion = "2.14.1"
 val javaFakerVersion = "1.0.2"
 val jjwtVersion = "0.11.2"
-//val lombokVersion = "1.18.22"
-//val postgresqlVersion = "42.2.23"
 
 dependencies {
     implementation("org.yaml:snakeyaml:$snakeYamlVersion")

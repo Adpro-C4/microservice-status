@@ -18,17 +18,6 @@ public class StatusTrackingOrderApplicationTests {
     @Autowired
     private Executor taskExecutor;
 
-    @Test
-    void contextLoads() {
-        // This test will simply attempt to start the Spring application context
-    }
-
-//    @Test
-//    void testMainMethod() {
-//        ConfigurableApplicationContext context = SpringApplication.run(StatusTrackingOrderApplication.class, new String[] {});
-//        assertNotNull(context);
-//        context.close();
-//    }
 
     @Test
     public void testTaskExecutorConfig() {

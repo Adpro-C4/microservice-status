@@ -14,29 +14,37 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 import id.ac.ui.cs.advprog.statustrackingorder.service.StatusService;
 import id.ac.ui.cs.advprog.statustrackingorder.service.TrackOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class RabbitMQListener {
 
-    @Autowired TrackOrderService trackOrderService;
-    @Autowired StatusService statusService;
+    private static final Logger logger = LoggerFactory.getLogger(RabbitMQListener.class);
+
+    private final TrackOrderService trackOrderService;
+    private final StatusService statusService;
+
+    @Autowired
+    public RabbitMQListener(TrackOrderService trackOrderService, StatusService statusService) {
+        this.trackOrderService = trackOrderService;
+        this.statusService = statusService;
+    }
 
     @RabbitListener(queues = "purchase-queue")
     public void receivePurchaseMessage(String message) {
-        System.out.println("Received message for purchase: " + message);
+        logger.info("Received message for purchase: {}", message);
     }
 
     @RabbitListener(queues = "tracking-order-queue")
     public void receiveOrderTrackingMessage(String message) {
-        System.out.println("Received message for tracking: " + message);
         try {
-            System.out.println(message);
             ObjectMapper objectMapper = new ObjectMapper();
             TrackOrder order = objectMapper.readValue(message, TrackOrder.class);
-            CompletableFuture.runAsync(()->{
+            CompletableFuture.runAsync(() -> {
                 trackOrderService.createTrackingAsync(order);
             });
-            CompletableFuture.runAsync(()->{
+            CompletableFuture.runAsync(() -> {
                 Status status = new Status();
                 status.setOrderId(order.getOrderId());
                 status.setOrderStatus(OrderStatus.MENUNGGU_PERSETUJUAN_ADMIN.getDisplayName());
@@ -44,10 +52,9 @@ public class RabbitMQListener {
             });
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            System.out.println(message);
-            e.printStackTrace();
+            logger.error("Error processing message", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error", e);
         }
     }
 }

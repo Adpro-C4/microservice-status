@@ -75,16 +75,6 @@ public class TrackOrderControllerTest {
         assertEquals("No such status with id: 456", response.getBody());
     }
 
-//    @Test
-//    public void testCreateTrackingOrder_Success() {
-//        doNothing().when(trackOrderService).createTrackingAsync(any(TrackOrder.class));
-//
-//        TrackOrder trackOrder = new TrackOrder();
-//        ResponseEntity<Object> response = trackOrderController.createTrackingOrder(trackOrder);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals("Status created successfully", response.getBody());
-//    }
     @Test
     public void testCreateTrackingOrder_Success() {
         TrackOrder trackOrder = new TrackOrder();

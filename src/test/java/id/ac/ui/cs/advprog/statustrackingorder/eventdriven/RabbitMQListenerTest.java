@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +28,7 @@ public class RabbitMQListenerTest {
     private RabbitMQListener rabbitMQListener;
 
     @Test
-    public void testReceiveOrderTrackingMessage() throws IOException {
+    public void testReceiveOrderTrackingMessage() {
 
         String message = "{\"orderId\": \"123456\", \"orderStatus\": \"PROCESSING\"}";
         TrackOrder order = new TrackOrder();
@@ -45,7 +44,7 @@ public class RabbitMQListenerTest {
     }
 
     @Test
-    public void testReceiveOrderTrackingMessage_ExceptionHandling() throws IOException {
+    public void testReceiveOrderTrackingMessage_ExceptionHandling() {
         String message = "{\"orderId\": \"123456\", \"orderStatus\": \"PROCESSING\"}";
 
         when(trackOrderService.createTrackingAsync(any(TrackOrder.class))).thenThrow(new RuntimeException("Failed to create tracking"));

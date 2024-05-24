@@ -35,8 +35,7 @@ public class StatusServiceImpl implements  StatusService {
     public Status getStatusById(Long id) {
         Optional<Status> statusOptional = statusRepository.findById(id);
         if (statusOptional.isPresent()) {
-            Status status = statusOptional.get();
-            return status;
+            return statusOptional.get();
         } else {
             throw new NoSuchElementException("No such product with id: " + id);
         }
@@ -46,8 +45,7 @@ public class StatusServiceImpl implements  StatusService {
     public Status getStatusByOrderId(String orderId) {
         Optional<Status> statusOptional = statusRepository.findByOrderId(orderId);
         if (statusOptional.isPresent()) {
-            Status status = statusOptional.get();
-            return status;
+            return statusOptional.get();
         } else {
             throw new NoSuchElementException("No such product with id: " + orderId);
         }

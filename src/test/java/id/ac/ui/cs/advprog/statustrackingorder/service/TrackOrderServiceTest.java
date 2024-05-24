@@ -14,8 +14,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -271,7 +269,7 @@ class TrackOrderServiceTest {
     }
 
     @Test
-    void testGenerateResiCodeGobek() throws Exception {
+    void testGenerateResiCodeGobek()  {
         String method = "gobek";
         String resiCode = "auto";
 
@@ -282,7 +280,7 @@ class TrackOrderServiceTest {
     }
 
     @Test
-    void testGenerateResiCodeSiwuzz() throws Exception {
+    void testGenerateResiCodeSiwuzz() {
         String method = "siwuzz";
         String resiCode = "auto";
 

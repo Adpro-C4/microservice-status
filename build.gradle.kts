@@ -31,15 +31,24 @@ sonarqube {
     }
 }
 
+// Define version variables
+val snakeYamlVersion = "1.29"
+val commonsPoolVersion = "2.11.1"
+val log4jVersion = "2.14.1"
+val javaFakerVersion = "1.0.2"
+val jjwtVersion = "0.11.2"
+val lombokVersion = "1.18.22"
+val postgresqlVersion = "42.2.23"
+
 dependencies {
-    implementation("org.yaml:snakeyaml:1.29")
+    implementation("org.yaml:snakeyaml:$snakeYamlVersion")
     implementation("org.springframework.boot:spring-boot-starter-amqp")
-    implementation("org.apache.commons:commons-pool2:2.11.1")
-    implementation ("org.apache.logging.log4j:log4j-slf4j-impl:2.14.1")
+    implementation("org.apache.commons:commons-pool2:$commonsPoolVersion")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation("com.github.javafaker:javafaker:$javaFakerVersion")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-mustache")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -50,13 +59,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
-    implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
-    compileOnly("org.projectlombok:lombok")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
-    annotationProcessor("org.projectlombok:lombok")
+    runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
@@ -66,22 +75,20 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("junit:junit")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.test{
-    filter{
+tasks.test {
+    filter {
         excludeTestsMatching("*FunctionalTest")
     }
-
     finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.jacocoTestReport{
+tasks.jacocoTestReport {
     dependsOn(tasks.test)
 }
 
@@ -91,11 +98,6 @@ tasks.withType<JacocoReport> {
         csv.required.set(true)
         html.required.set(true)
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.named("sonarqube") {

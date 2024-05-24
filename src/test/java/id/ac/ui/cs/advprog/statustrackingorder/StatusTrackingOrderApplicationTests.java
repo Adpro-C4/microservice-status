@@ -5,22 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
 @SpringBootTest
-public class StatusTrackingOrderApplicationTests {
+class StatusTrackingOrderApplicationTests {
 
     @Autowired
     private Executor taskExecutor;
 
 
     @Test
-    public void testTaskExecutorConfig() {
+    void testTaskExecutorConfig() {
         assertNotNull(taskExecutor);
         ThreadPoolTaskExecutor executor = (ThreadPoolTaskExecutor) taskExecutor;
         assertEquals(2, executor.getCorePoolSize());

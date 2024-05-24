@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TrackOrderTest {
+class TrackOrderTest {
 
     @Test
-    public void testTrackOrderGettersAndSetters() {
+    void testTrackOrderGettersAndSetters() {
         TrackOrder trackOrder = new TrackOrder();
         trackOrder.setTrackingId("trk123");
         trackOrder.setOrderId("order123");
@@ -21,7 +21,7 @@ public class TrackOrderTest {
     }
 
     @Test
-    public void testTrackOrderAllArgsConstructor() {
+    void testTrackOrderAllArgsConstructor() {
         TrackOrder trackOrder = new TrackOrder("trk456", "order456", "Standard", "resi456");
 
         assertEquals("trk456", trackOrder.getTrackingId());
@@ -31,7 +31,7 @@ public class TrackOrderTest {
     }
 
     @Test
-    public void testTrackOrderNoArgsConstructor() {
+    void testTrackOrderNoArgsConstructor() {
         TrackOrder trackOrder = new TrackOrder();
 
         assertNull(trackOrder.getTrackingId());

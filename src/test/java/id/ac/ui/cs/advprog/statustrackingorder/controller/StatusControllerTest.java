@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StatusControllerTest {
+class StatusControllerTest {
 
     @Mock
     private StatusService statusService;
@@ -31,7 +31,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testGetStatusById() {
+    void testGetStatusById() {
         Status status = new Status();
         when(statusService.getStatusById(1L)).thenReturn(status);
 
@@ -42,7 +42,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testGetStatusByIdNotFound() {
+    void testGetStatusByIdNotFound() {
         when(statusService.getStatusById(1L)).thenThrow(new NoSuchElementException());
 
         ResponseEntity<Object> response = statusController.getStatusById(1L);
@@ -52,7 +52,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testGetStatusByOrderId() {
+    void testGetStatusByOrderId() {
         Status status = new Status();
         when(statusService.getStatusByOrderId("order123")).thenReturn(status);
 
@@ -63,7 +63,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testGetStatusByOrderIdNotFound() {
+    void testGetStatusByOrderIdNotFound() {
         when(statusService.getStatusByOrderId("order123")).thenThrow(new NoSuchElementException());
 
         ResponseEntity<Object> response = statusController.getStatusByOderId("order123");
@@ -73,7 +73,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testAllStatus() {
+    void testAllStatus() {
         Status status1 = new Status();
         Status status2 = new Status();
         when(statusService.getAllStatus()).thenReturn(Arrays.asList(status1, status2));
@@ -85,7 +85,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testCreateStatus() {
+    void testCreateStatus() {
         Status status = new Status();
         when(statusService.createStatusAsync(any(Status.class))).thenReturn(CompletableFuture.completedFuture(status));
 
@@ -97,7 +97,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testUpdateStatus() {
+    void testUpdateStatus() {
         Status status = new Status();
         status.setId(1L);
 
@@ -111,7 +111,7 @@ public class StatusControllerTest {
     }
 
     @Test
-    public void testUpdateStatusNotFound() {
+    void testUpdateStatusNotFound() {
         Status status = new Status();
         status.setId(1L);
 

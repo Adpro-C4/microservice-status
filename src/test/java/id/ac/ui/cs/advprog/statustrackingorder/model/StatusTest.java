@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StatusTest {
+class StatusTest {
 
     @Test
-    public void testStatusGettersAndSetters() {
+    void testStatusGettersAndSetters() {
         Status status = new Status();
         status.setId(1L);
         status.setOrderId("12345");
@@ -19,7 +19,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testStatusAllArgsConstructor() {
+    void testStatusAllArgsConstructor() {
         Status status = new Status(2L, "54321", "Delivered");
 
         assertEquals(2L, status.getId());
@@ -28,7 +28,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testStatusNoArgsConstructor() {
+    void testStatusNoArgsConstructor() {
         Status status = new Status();
 
         assertNull(status.getId());

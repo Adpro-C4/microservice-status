@@ -16,11 +16,9 @@ import java.util.concurrent.CompletableFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-public class TrackOrderControllerTest {
+class TrackOrderControllerTest {
 
     @InjectMocks
     private TrackOrderController trackOrderController;
@@ -34,7 +32,7 @@ public class TrackOrderControllerTest {
     }
 
     @Test
-    public void testGetTrackOrderById_Success() {
+    void testGetTrackOrderById_Success() {
         TrackOrder trackOrder = new TrackOrder();
         when(trackOrderService.getTrackingById(anyString())).thenReturn(trackOrder);
 
@@ -45,7 +43,7 @@ public class TrackOrderControllerTest {
     }
 
     @Test
-    public void testGetTrackOrderById_NotFound() {
+    void testGetTrackOrderById_NotFound() {
         when(trackOrderService.getTrackingById(anyString())).thenThrow(new NoSuchElementException());
 
         ResponseEntity<Object> response = trackOrderController.getTrackOrderById("123");
@@ -55,7 +53,7 @@ public class TrackOrderControllerTest {
     }
 
     @Test
-    public void testGetStatusByOrderId_Success() {
+    void testGetStatusByOrderId_Success() {
         TrackOrder trackOrder = new TrackOrder();
         when(trackOrderService.getTrackingByOrderId(anyString())).thenReturn(trackOrder);
 
@@ -66,7 +64,7 @@ public class TrackOrderControllerTest {
     }
 
     @Test
-    public void testGetStatusByOrderId_NotFound() {
+    void testGetStatusByOrderId_NotFound() {
         when(trackOrderService.getTrackingByOrderId(anyString())).thenThrow(new NoSuchElementException());
 
         ResponseEntity<Object> response = trackOrderController.getStatusByOderId("456");
@@ -76,7 +74,7 @@ public class TrackOrderControllerTest {
     }
 
     @Test
-    public void testCreateTrackingOrder_Success() {
+    void testCreateTrackingOrder_Success() {
         TrackOrder trackOrder = new TrackOrder();
         when(trackOrderService.createTrackingAsync(any(TrackOrder.class))).thenReturn(new CompletableFuture<>());
 

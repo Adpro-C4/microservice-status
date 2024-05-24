@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StatusServiceTest {
+class StatusServiceTest {
 
     @Mock
     private StatusRepository statusRepository;
@@ -36,7 +36,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testCreateStatusAsync() throws Exception {
+    void testCreateStatusAsync() throws Exception {
         Status status = new Status();
         when(statusRepository.save(status)).thenReturn(status);
 
@@ -48,7 +48,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testGetStatusById() {
+    void testGetStatusById() {
         Status status = new Status();
         when(statusRepository.findById(1L)).thenReturn(Optional.of(status));
 
@@ -58,7 +58,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testGetStatusByIdNotFound() {
+    void testGetStatusByIdNotFound() {
         when(statusRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () -> {
@@ -67,7 +67,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testGetStatusByOrderId() {
+    void testGetStatusByOrderId() {
         Status status = new Status();
         when(statusRepository.findByOrderId("order123")).thenReturn(Optional.of(status));
 
@@ -77,7 +77,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testGetStatusByOrderIdNotFound() {
+    void testGetStatusByOrderIdNotFound() {
         when(statusRepository.findByOrderId("order123")).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () -> {
@@ -86,7 +86,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testUpdateStatus() throws Exception {
+    void testUpdateStatus() throws Exception {
         Status oldStatus = new Status();
         oldStatus.setId(1L);
         oldStatus.setOrderStatus(OrderStatus.MENUNGGU_PERSETUJUAN_ADMIN.getDisplayName());
@@ -107,7 +107,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testUpdateStatusToCompletedNotSendMessage() throws Exception {
+    void testUpdateStatusToCompletedNotSendMessage() throws Exception {
         Status oldStatus = new Status();
         oldStatus.setId(1L);
         oldStatus.setOrderStatus(OrderStatus.SELESAI.getDisplayName());
@@ -128,7 +128,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testUpdateStatusNotFound() {
+    void testUpdateStatusNotFound() {
         Status newStatus = new Status();
         newStatus.setId(1L);
         newStatus.setOrderStatus(OrderStatus.SELESAI.getDisplayName());
@@ -141,7 +141,7 @@ public class StatusServiceTest {
     }
 
     @Test
-    public void testGetAllStatus() {
+    void testGetAllStatus() {
         Status status1 = new Status();
         Status status2 = new Status();
         when(statusRepository.findAll()).thenReturn(Arrays.asList(status1, status2));

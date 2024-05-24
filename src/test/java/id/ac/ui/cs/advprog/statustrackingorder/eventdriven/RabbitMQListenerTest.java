@@ -1,13 +1,9 @@
 package id.ac.ui.cs.advprog.statustrackingorder.eventdriven;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.statustrackingorder.enums.OrderStatus;
-import id.ac.ui.cs.advprog.statustrackingorder.eventdriven.RabbitMQListener;
 import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 import id.ac.ui.cs.advprog.statustrackingorder.service.StatusService;
 import id.ac.ui.cs.advprog.statustrackingorder.service.TrackOrderService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

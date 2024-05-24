@@ -41,9 +41,7 @@ public class RabbitMQListener {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             TrackOrder order = objectMapper.readValue(message, TrackOrder.class);
-            CompletableFuture.runAsync(() -> {
-                trackOrderService.createTrackingAsync(order);
-            });
+            CompletableFuture.runAsync(() -> trackOrderService.createTrackingAsync(order));
             CompletableFuture.runAsync(() -> {
                 Status status = new Status();
                 status.setOrderId(order.getOrderId());

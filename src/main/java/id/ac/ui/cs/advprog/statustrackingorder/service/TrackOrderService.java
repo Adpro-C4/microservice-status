@@ -6,10 +6,10 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.TrackOrder;
 
 
 public interface TrackOrderService {
-    public  CompletableFuture<TrackOrder> createTrackingAsync( TrackOrder trackOrder);
+    CompletableFuture<TrackOrder> createTrackingAsync( TrackOrder trackOrder);
 
-    public TrackOrder getTrackingById(String id);
+    TrackOrder getTrackingById(String id);
 
-    public TrackOrder getTrackingByOrderId(String orderId);
+    TrackOrder getTrackingByOrderId(String orderId);
 
 }

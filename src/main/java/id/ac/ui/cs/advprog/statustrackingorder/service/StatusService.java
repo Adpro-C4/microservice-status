@@ -8,14 +8,14 @@ import id.ac.ui.cs.advprog.statustrackingorder.model.Status;
 
 public interface StatusService {
 
-    public CompletableFuture<Status> createStatusAsync(Status status);
+   CompletableFuture<Status> createStatusAsync(Status status);
 
-    public Status getStatusById(Long id);
+    Status getStatusById(Long id);
 
-    public Status getStatusByOrderId(String orderId);
+    Status getStatusByOrderId(String orderId);
 
-    public void  updateStatus(Status status);
-    public List<Status> getAllStatus();
+    void  updateStatus(Status status);
+    List<Status> getAllStatus();
 
 
 

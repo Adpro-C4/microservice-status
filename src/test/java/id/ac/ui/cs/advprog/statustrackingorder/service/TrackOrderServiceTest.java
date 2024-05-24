@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class TrackOrderServiceTest {
+class TrackOrderServiceTest {
 
     @Mock
     private TrackOrderRepository trackOrderRepository;
@@ -36,7 +36,7 @@ public class TrackOrderServiceTest {
 
 
     @Test
-    public void testCreateTrackingAsync() throws Exception {
+    void testCreateTrackingAsync() throws Exception {
         TrackOrder trackOrder = new TrackOrder();
         trackOrder.setOrderId("order123");
         trackOrder.setMethode("jte");
@@ -56,7 +56,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGetTrackingByIdExists() {
+    void testGetTrackingByIdExists() {
         String id = "trk123";
         TrackOrder trackOrder = new TrackOrder(id, "order123", "Express", "resi123");
         when(trackOrderRepository.findById(id)).thenReturn(Optional.of(trackOrder));
@@ -69,7 +69,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGetTrackingByIdNotExists() {
+    void testGetTrackingByIdNotExists() {
         String id = "trk123";
         when(trackOrderRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -78,7 +78,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGetTrackingByOrderIdExists() {
+    void testGetTrackingByOrderIdExists() {
         String orderId = "order123";
         TrackOrder trackOrder = new TrackOrder("trk123", orderId, "Express", "resi123");
         when(trackOrderRepository.findByOrderId(orderId)).thenReturn(Optional.of(trackOrder));
@@ -91,7 +91,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGetTrackingByOrderIdNotExists() {
+    void testGetTrackingByOrderIdNotExists() {
         String orderId = "order123";
         when(trackOrderRepository.findByOrderId(orderId)).thenReturn(Optional.empty());
 
@@ -100,7 +100,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGenerateResiCode() {
+    void testGenerateResiCode() {
         String method = "jte";
         String resiCode = "auto";
 
@@ -109,28 +109,28 @@ public class TrackOrderServiceTest {
         assertTrue(result.startsWith("JTE-"));
     }
     @Test
-    public void testGenerateResiCodeInvalidMethod() {
+    void testGenerateResiCodeInvalidMethod() {
         String method = "invalid";
         String resiCode = "auto";
 
         assertThrows(IllegalArgumentException.class, () -> trackOrderService.generateResiCode(method, resiCode));
     }
     @Test
-    public void testGenerateAlphanumeric() {
+    void testGenerateAlphanumeric() {
         String alphanumeric = trackOrderService.generateAlphanumeric();
         assertNotNull(alphanumeric);
         assertEquals(12, alphanumeric.length());
         assertTrue(alphanumeric.matches("[A-Z0-9]+"));
     }
     @Test
-    public void testGenerateAlphanumericNonNumber() {
+    void testGenerateAlphanumericNonNumber() {
         String alphanumericNonNumber = trackOrderService.generateAlphanumericNonNumber();
         assertNotNull(alphanumericNonNumber);
         assertEquals(12, alphanumericNonNumber.length());
         assertTrue(alphanumericNonNumber.matches("[A-Z]+"));
     }
     @Test
-    public void testResiJTEAuto() throws Exception {
+    void testResiJTEAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiJTE", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "auto");
@@ -139,14 +139,14 @@ public class TrackOrderServiceTest {
         assertTrue(resiCode.matches("\\d+"));
     }
     @Test
-    public void testResiJTEWithCode() throws Exception {
+    void testResiJTEWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiJTE", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "123456789012");
         assertEquals("123456789012", resiCode);
     }
     @Test
-    public void testResiGBKAuto() throws Exception {
+    void testResiGBKAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiGBK", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "auto");
@@ -155,14 +155,14 @@ public class TrackOrderServiceTest {
         assertTrue(resiCode.matches("[A-Z0-9]+"));
     }
     @Test
-    public void testResiGBKWithCode() throws Exception {
+    void testResiGBKWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiGBK", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "ABCDEFGHIJKL");
         assertEquals("ABCDEFGHIJKL", resiCode);
     }
     @Test
-    public void testResiSIWUZZAuto() throws Exception {
+    void testResiSIWUZZAuto() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiSIWUZZ", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "auto");
@@ -171,21 +171,21 @@ public class TrackOrderServiceTest {
         assertTrue(resiCode.matches("[A-Z]+"));
     }
     @Test
-    public void testResiSIWUZZWithCode() throws Exception {
+    void testResiSIWUZZWithCode() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("resiSIWUZZ", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "ABCDEFGHIJKL");
         assertEquals("ABCDEFGHIJKL", resiCode);
     }
     @Test
-    public void testValidateNumberValid() throws Exception {
+    void testValidateNumberValid() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "123456789012");
         assertEquals("123456789012", resiCode);
     }
     @Test
-    public void testValidateNumberInvalidLength() throws Exception {
+    void testValidateNumberInvalidLength() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
         method.setAccessible(true);
         try {
@@ -199,7 +199,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testValidateAlphanumericValid() throws Exception {
+    void testValidateAlphanumericValid() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateAlphanumeric", String.class);
         method.setAccessible(true);
         String resiCode = (String) method.invoke(trackOrderService, "ABCDEFGHIJKL");
@@ -207,7 +207,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testValidateAlphanumericInvalidLength() throws Exception {
+    void testValidateAlphanumericInvalidLength() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateAlphanumeric", String.class);
         method.setAccessible(true);
         try {
@@ -221,7 +221,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testValidateNumberInvalidFormat() throws Exception {
+    void testValidateNumberInvalidFormat() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
         method.setAccessible(true);
         try {
@@ -235,7 +235,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testValidateNumberInvalidCharacters() throws Exception {
+    void testValidateNumberInvalidCharacters() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("validateNumber", String.class);
         method.setAccessible(true);
         try {
@@ -249,7 +249,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGenerateNumberLengthLessThan12() throws Exception {
+    void testGenerateNumberLengthLessThan12() throws Exception {
         Method method = TrackOrderServiceImpl.class.getDeclaredMethod("genereteNumber");
         method.setAccessible(true);
 
@@ -271,7 +271,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGenerateResiCodeGobek() throws Exception {
+    void testGenerateResiCodeGobek() throws Exception {
         String method = "gobek";
         String resiCode = "auto";
 
@@ -282,7 +282,7 @@ public class TrackOrderServiceTest {
     }
 
     @Test
-    public void testGenerateResiCodeSiwuzz() throws Exception {
+    void testGenerateResiCodeSiwuzz() throws Exception {
         String method = "siwuzz";
         String resiCode = "auto";
 

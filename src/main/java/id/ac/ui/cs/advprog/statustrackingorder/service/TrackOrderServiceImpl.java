@@ -16,10 +16,14 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
-public class TrackOrderServiceImpl implements  TrackOrderService {
+public class TrackOrderServiceImpl implements TrackOrderService {
 
     @Autowired
-    private  TrackOrderRepository trackOrderRepository;
+    private TrackOrderRepository trackOrderRepository;
+
+    private static final String INVALID_INPUT_LENGTH = "Invalid input: '%s' must be equals 12.";
+    private static final String INVALID_INPUT_NUMBER = "Invalid input: '%s' must be a number.";
+    private static final Random RANDOM = new Random();
 
     @Override
     @Async
@@ -41,9 +45,10 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findByOrderId(orderId);
         return trackOrderOptional.orElseThrow(() -> new NoSuchElementException("No such track order with order id: " + orderId));
     }
+
     String generateResiCode(String method, String resiCode, String orderId) {
         return switch (method.toLowerCase()) {
-            case "jte" -> "JTE-" + resiJTE(resiCode) ;
+            case "jte" -> "JTE-" + resiJTE(resiCode);
             case "gobek" -> "GBK-" + resiGBK(resiCode);
             case "siwuzz" -> "SWZ-" + resiSIWUZZ(resiCode);
             default -> throw new IllegalArgumentException("Invalid shipping method");
@@ -51,44 +56,44 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
     }
 
     String resiJTE(String resiCode) {
-        if(!resiCode.equals("auto")){
+        if (!resiCode.equals("auto")) {
             return validateNumber(resiCode);
         }
         return genereteNumber();
     }
 
     String resiGBK(String resiCode) {
-        if(!resiCode.equals("auto")){
+        if (!resiCode.equals("auto")) {
             return validateAlphanumeric(resiCode);
         }
         return generateAlphanumeric();
     }
 
     String resiSIWUZZ(String resiCode) {
-        if(!resiCode.equals("auto")){
+        if (!resiCode.equals("auto")) {
             return validateAlphanumeric(resiCode);
         }
         return generateAlphanumericNonNumber();
     }
 
     String validateNumber(String resiCode) {
-        if (resiCode.length() != 12){
-            throw new IllegalArgumentException("Invalid input: '" + resiCode + "' must be equals 12.");
+        if (resiCode.length() != 12) {
+            throw new IllegalArgumentException(String.format(INVALID_INPUT_LENGTH, resiCode));
         }
         if (!resiCode.matches("\\d+")) {
-            throw new IllegalArgumentException("Invalid input: '" + resiCode + "' must be a number.");
+            throw new IllegalArgumentException(String.format(INVALID_INPUT_NUMBER, resiCode));
         }
         return resiCode;
     }
 
-    String validateAlphanumeric(String resiCode){
-        if (resiCode.length() != 12){
-            throw new IllegalArgumentException("Invalid input: '" + resiCode + "' must be equals 12.");
+    String validateAlphanumeric(String resiCode) {
+        if (resiCode.length() != 12) {
+            throw new IllegalArgumentException(String.format(INVALID_INPUT_LENGTH, resiCode));
         }
         return resiCode;
     }
 
-    String genereteNumber(){
+    String genereteNumber() {
         LocalDateTime now = LocalDateTime.now();
         String year = String.format("%02d", now.getYear() % 100);
         String month = String.format("%02d", now.getMonthValue());
@@ -108,42 +113,35 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         return generatedNumber;
     }
 
-    String generateAlphanumeric(){
+    String generateAlphanumeric() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(12);
 
         for (int i = 0; i < 12; i++) {
-            char randomChar = characters.charAt(random.nextInt(characters.length()));
+            char randomChar = characters.charAt(RANDOM.nextInt(characters.length()));
             sb.append(randomChar);
         }
         return sb.toString();
     }
 
-    String generateAlphanumericNonNumber(){
+    String generateAlphanumericNonNumber() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(12);
 
         for (int i = 0; i < 12; i++) {
-            char randomChar = characters.charAt(random.nextInt(characters.length()));
+            char randomChar = characters.charAt(RANDOM.nextInt(characters.length()));
             sb.append(randomChar);
         }
         return sb.toString();
     }
 
     static String generateRandomDigits(int length) {
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
-        for(int i = 0; i < length; i++) {
-            sb.append(random.nextInt(10)); //
+        for (int i = 0; i < length; i++) {
+            sb.append(RANDOM.nextInt(10));
         }
         return sb.toString();
     }
-
-
-
-
 }

@@ -41,7 +41,7 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         Optional<TrackOrder> trackOrderOptional = trackOrderRepository.findByOrderId(orderId);
         return trackOrderOptional.orElseThrow(() -> new NoSuchElementException("No such track order with order id: " + orderId));
     }
-    private String generateResiCode(String method, String resiCode, String orderId) {
+    String generateResiCode(String method, String resiCode, String orderId) {
         return switch (method.toLowerCase()) {
             case "jte" -> "JTE-" + resiJTE(resiCode) ;
             case "gobek" -> "GBK-" + resiGBK(resiCode);
@@ -50,28 +50,28 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         };
     }
 
-    private String resiJTE(String resiCode) {
+    String resiJTE(String resiCode) {
         if(!resiCode.equals("auto")){
             return validateNumber(resiCode);
         }
         return genereteNumber();
     }
 
-    private String resiGBK(String resiCode) {
+    String resiGBK(String resiCode) {
         if(!resiCode.equals("auto")){
             return validateAlphanumeric(resiCode);
         }
         return generateAlphanumeric();
     }
 
-    private String resiSIWUZZ(String resiCode) {
+    String resiSIWUZZ(String resiCode) {
         if(!resiCode.equals("auto")){
             return validateAlphanumeric(resiCode);
         }
         return generateAlphanumericNonNumber();
     }
 
-    private String validateNumber(String resiCode) {
+    String validateNumber(String resiCode) {
         if (resiCode.length() != 12){
             throw new IllegalArgumentException("Invalid input: '" + resiCode + "' must be equals 12.");
         }
@@ -81,14 +81,14 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         return resiCode;
     }
 
-    private String validateAlphanumeric(String resiCode){
+    String validateAlphanumeric(String resiCode){
         if (resiCode.length() != 12){
             throw new IllegalArgumentException("Invalid input: '" + resiCode + "' must be equals 12.");
         }
         return resiCode;
     }
 
-    private String genereteNumber(){
+    String genereteNumber(){
         LocalDateTime now = LocalDateTime.now();
         String year = String.format("%02d", now.getYear() % 100);
         String month = String.format("%02d", now.getMonthValue());
@@ -108,7 +108,7 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         return generatedNumber;
     }
 
-    private String generateAlphanumeric(){
+    String generateAlphanumeric(){
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
         Random random = new Random();
@@ -121,7 +121,7 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         return sb.toString();
     }
 
-    private String generateAlphanumericNonNumber(){
+    String generateAlphanumericNonNumber(){
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         Random random = new Random();
@@ -134,7 +134,7 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         return sb.toString();
     }
 
-    private static String generateRandomDigits(int length) {
+    static String generateRandomDigits(int length) {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         for(int i = 0; i < length; i++) {
@@ -142,6 +142,8 @@ public class TrackOrderServiceImpl implements  TrackOrderService {
         }
         return sb.toString();
     }
+
+
 
 
 }
